@@ -7,7 +7,7 @@
     max-width: 600px;
 }
 
-h1 {
+#gamePanel h1 {
     text-align: center;
     width: 100%;
     padding-top: 0px;
@@ -90,4 +90,8 @@ input {
 }
 #cell9, #cell11 {
     background-color: blue;
+}
+#playingField h1 {
+    margin: auto;
+    padding: auto;
 }

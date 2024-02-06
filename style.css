@@ -88,3 +88,6 @@ input {
     background-color: lavender;
     border-style: dashed;
 }
+#cell9, #cell11 {
+    background-color: blue;
+}

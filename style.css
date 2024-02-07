@@ -5,6 +5,7 @@
     background-color: grey;
     width: auto;
     max-width: 600px;
+    min-width: 600px;
 }
 
 #gamePanel h1 {

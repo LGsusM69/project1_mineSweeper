@@ -129,6 +129,17 @@ function calculateAdjacent(index) {
         adjacentCells.delete(index+11);
     }
     for(const value of adjacentCells) {
-        if(cellState[value] === "x") adjacentMines ++;
+        console.log("check: " + value);
+        if(cellState[value] === "x") {adjacentMines ++;
+            console.log("mine: " + value);
+        }
     }
+    console.log(adjacentCells);
     return adjacentMines;}
+
+function boardTest() {
+    for(let i= 0; i < cellState.length; i++) {
+            if(cellState[i] === "x") continue;
+            cells[i].innerHTML = i;
+    }
+}

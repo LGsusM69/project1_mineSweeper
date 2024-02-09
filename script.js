@@ -24,6 +24,7 @@ const cells = document.querySelectorAll(".cell");
 
 // event listeners
 newGameButton.addEventListener("click", function(evt) {
+    newGame();
 });
 
 playingField.addEventListener("click",function(evt) {
@@ -49,9 +50,11 @@ playingField.addEventListener("click",function(evt) {
     }
     updateState();
 });
+
 //functions
 
 function newGame() {
+    coveredCells = 100;
     cellState.forEach(function(element, index) { //clear the board
         cellState[index] = 0;                   
     });
@@ -83,19 +86,28 @@ function newGame() {
         //cells[index].innerHTML = "<button></button>";
         //console.log(element.innerHTML === cells[0].innerHTML);
         gameRunning = true;
-        //console.log(gameRunning);
 
     });
-    coveredCells = coveredCells - mineCounter;
+    coveredCells = 100 - mineCounter.value;
 }
-function gameLost(index) {
-
+function gameLost(dex) {
+    cellState.forEach(function(element, index) {
+        if(element === "x")cells[index].innerHTML = "💣"
+    });
+    cells[dex].innerHTML = "💥";
+    gameRunning = false;
 }
 function gameWon() {
-
+    cellState.forEach(function(element, index) {
+        if(element === "x")cells[index].innerHTML = "🥳"
+    });
+    gameRunning = false;
 }
 function updateState() {
-
+    if(coveredCells === 0) {
+        gameRunning = false;
+        gameWon();
+    }
 }
 function calculateAdjacent(index) {
     index = parseInt(index);
@@ -137,16 +149,19 @@ function calculateAdjacent(index) {
     return adjacentCells;
 }
 function clearEmpty(index) {
+    if(cellState[index] !== "x" & 
+        cellState[index] === 0 & cells[index].innerHTML !== "")
+        coveredCells --;
     cells[index].innerHTML = "";
-    coveredCells --;
     let adjacent = calculateAdjacent(index);
     adjacent.forEach(element => {
         if(cellState[element] === "x" || 
-            cellState[element] !== 0 || cells[element].innerHTML === "")
-            adjacent.delete(element);
+        cellState[element] !== 0 || cells[element].innerHTML === "")
+        adjacent.delete(element);
     });
     adjacent.forEach(element => clearEmpty(element));
     updateState();
+    
 }
 
 function boardTest() {

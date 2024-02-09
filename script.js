@@ -1,5 +1,6 @@
 
 //constants and variables
+let coveredCells = 100;
 let gameRunning = false;
 let cellState = 
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 
@@ -23,7 +24,6 @@ const cells = document.querySelectorAll(".cell");
 
 // event listeners
 newGameButton.addEventListener("click", function(evt) {
-    console.log(evt.target);
 });
 
 playingField.addEventListener("click",function(evt) {
@@ -34,22 +34,20 @@ playingField.addEventListener("click",function(evt) {
         gameLost(index);
         return;
     }
-    //if(cellState[index].class) return;
-    console.log(cellState[index] + "calamardo:  ");
 
-    const adjacentMines = calculateAdjacent(index);
-    if(adjacentMines === 0) {
-        cells[index].innerHTML = "";
+    if(cellState[index] === 0) {
+        clearEmpty(index);
     }
     else {
         const newH1 = document.createElement("h1");
         newH1.style.width = "100%";
         newH1.style.height = "100%";
-        newH1.innerText = adjacentMines;
+        newH1.innerText = cellState[index];
         cells[index].innerHTML = "";
+        coveredCells --;
         cells[index].appendChild(newH1);
     }
-
+    updateState();
 });
 //functions
 
@@ -58,7 +56,7 @@ function newGame() {
         cellState[index] = 0;                   
     });
     mineCounter.value = 0;                      // reset counter
-    let numberOfMines = 0;                      // reset global variable
+    let numberOfMines = 0;                      // reset variable
     if(difficulty.value === "easy") numberOfMines = 15;
     if(difficulty.value === "medium") numberOfMines = 30;   //calculate#ofmines based on difficulty
     if (difficulty.value === "hard") numberOfMines = 45;
@@ -69,7 +67,7 @@ function newGame() {
     }
     cellState.forEach(function(element, index) {    //place numbers on board(adjacent mines)
         if(element === "x") return;
-        cellState[index] = calculateAdjacent(index);
+        calculateAdjacent(index);
     });
     cellState.forEach(element => {      // update the mine counter
         if(element === "x")mineCounter.value ++
@@ -88,8 +86,7 @@ function newGame() {
         //console.log(gameRunning);
 
     });
-    //cells[0].innerHTML = "calamardo";
-    console.log(cellState);
+    coveredCells = coveredCells - mineCounter;
 }
 function gameLost(index) {
 
@@ -97,8 +94,12 @@ function gameLost(index) {
 function gameWon() {
 
 }
+function updateState() {
+
+}
 function calculateAdjacent(index) {
-    const adjacentCells = new Set();
+    index = parseInt(index);
+    let adjacentCells = new Set();
     let adjacentMines = 0;
     adjacentCells.add(index-11);
     adjacentCells.add(index-10);
@@ -129,13 +130,24 @@ function calculateAdjacent(index) {
         adjacentCells.delete(index+11);
     }
     for(const value of adjacentCells) {
-        console.log("check: " + value);
         if(cellState[value] === "x") {adjacentMines ++;
-            console.log("mine: " + value);
         }
     }
-    console.log(adjacentCells);
-    return adjacentMines;}
+    cellState[index] = adjacentMines;
+    return adjacentCells;
+}
+function clearEmpty(index) {
+    cells[index].innerHTML = "";
+    coveredCells --;
+    let adjacent = calculateAdjacent(index);
+    adjacent.forEach(element => {
+        if(cellState[element] === "x" || 
+            cellState[element] !== 0 || cells[element].innerHTML === "")
+            adjacent.delete(element);
+    });
+    adjacent.forEach(element => clearEmpty(element));
+    updateState();
+}
 
 function boardTest() {
     for(let i= 0; i < cellState.length; i++) {

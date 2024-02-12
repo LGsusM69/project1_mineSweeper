@@ -83,8 +83,6 @@ function newGame() {
         newButton.style.background = "darkgray";
         cells[index].innerHTML = "";
         cells[index].appendChild(newButton);
-        //cells[index].innerHTML = "<button></button>";
-        //console.log(element.innerHTML === cells[0].innerHTML);
         gameRunning = true;
 
     });
